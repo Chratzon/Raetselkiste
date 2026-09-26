@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Krönchen</title>
+<title>Rätselkiste</title>
 <meta name="theme-color" content="#1B2238">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Krönchen">
+<meta name="apple-mobile-web-app-title" content="Rätselkiste">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
@@ -19,15 +19,15 @@
 :root{
   --bg:#E4E8EF;--ink:#1B2238;--muted:#5A6378;--panel:#F5F7FA;--line:#C5CCD8;
   --gold:#E3B341;--crown-line:#6B4A0E;--edge:#1B2238;--thin:rgba(27,34,56,.18);
-  --hint:#2F6FDB;--edge-w:1.5px;--thin-w:.5px;--x:#1B2238;--bad:#C4302B;--accent:#1B2238;--on-accent:#F5F7FA;
+  --hint:#2F6FDB;--cellbg:#F7F8FB;--givenbg:#DDE2EA;--path:#3E63DD;--pathbg:rgba(62,99,221,.16);--edge-w:1.5px;--thin-w:.5px;--x:#1B2238;--bad:#C4302B;--accent:#1B2238;--on-accent:#F5F7FA;
   --serif:"Young Serif",Georgia,"Times New Roman",serif;
   --sans:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#121827;--ink:#E7EAF0;--muted:#98A2B8;--panel:#1C2336;--line:#2E3750;--edge:#0B0F1A;--thin:rgba(11,15,26,.25);--accent:#E3B341;--on-accent:#1B2238;--hint:#7FB0FF;
+  --bg:#121827;--ink:#E7EAF0;--muted:#98A2B8;--panel:#1C2336;--line:#2E3750;--edge:#0B0F1A;--thin:rgba(11,15,26,.25);--accent:#E3B341;--on-accent:#1B2238;--hint:#7FB0FF;--cellbg:#232B40;--givenbg:#343E5C;--path:#7C9BFF;--pathbg:rgba(124,155,255,.2);
 }}
-:root[data-theme="dark"]{--bg:#121827;--ink:#E7EAF0;--muted:#98A2B8;--panel:#1C2336;--line:#2E3750;--edge:#0B0F1A;--thin:rgba(11,15,26,.25);--accent:#E3B341;--on-accent:#1B2238;--hint:#7FB0FF}
+:root[data-theme="dark"]{--bg:#121827;--ink:#E7EAF0;--muted:#98A2B8;--panel:#1C2336;--line:#2E3750;--edge:#0B0F1A;--thin:rgba(11,15,26,.25);--accent:#E3B341;--on-accent:#1B2238;--hint:#7FB0FF;--cellbg:#232B40;--givenbg:#343E5C;--path:#7C9BFF;--pathbg:rgba(124,155,255,.2)}
 *,*::before,*::after{box-sizing:inherit}
 [hidden]{display:none!important}
 html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -35,7 +35,7 @@ body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:16px/1.
 main{max-width:520px;margin:0 auto;padding:14px 16px 24px;display:flex;flex-direction:column;gap:14px}
 header{display:flex;align-items:center;gap:10px}
 h1{font:400 2rem/1 var(--serif);margin:0;flex:1;letter-spacing:-.01em}
-h1 svg{width:.8em;height:.8em;vertical-align:-.02em;margin-right:.18em}
+h1 svg{width:.8em;height:.8em;vertical-align:-.04em;margin-right:.22em}
 .icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--ink);display:grid;place-items:center;cursor:pointer;font:700 1.05rem var(--sans)}
 .icon-btn svg{width:20px;height:20px}
 .seg{display:grid;grid-template-columns:1fr 1fr;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:3px}
@@ -44,7 +44,7 @@ h1 svg{width:.8em;height:.8em;vertical-align:-.02em;margin-right:.18em}
 .status{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 #label{font-weight:500}
 #timer{font:400 1.9rem/1 var(--serif);font-variant-numeric:tabular-nums}
-#board{--n:8;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));grid-template-rows:repeat(var(--n),minmax(0,1fr));width:100%;aspect-ratio:1;border:2px solid var(--edge);border-radius:6px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;background:var(--panel)}
+#board{--n:8;position:relative;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));grid-template-rows:repeat(var(--n),minmax(0,1fr));width:100%;aspect-ratio:1;border:2px solid var(--edge);border-radius:6px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;background:var(--panel)}
 .building{grid-column:1/-1;align-self:center;text-align:center;color:var(--muted);margin:0}
 .cell{position:relative;padding:0;margin:0;border-radius:0;cursor:pointer;display:grid;place-items:center;min-width:0;min-height:0;font:inherit;color:var(--x)}
 .cell:focus-visible{outline:3px solid var(--accent);outline-offset:-4px;z-index:1}
@@ -58,10 +58,29 @@ h1 svg{width:.8em;height:.8em;vertical-align:-.02em;margin-right:.18em}
 .cell[data-s="gc"] svg{opacity:.5}
 .cell.tgt{box-shadow:inset 0 0 0 3px var(--hint);animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{50%{box-shadow:inset 0 0 0 5px var(--hint)}}
-.cell.dim{filter:saturate(.35) brightness(.78)}
+.cell.dim{filter:saturate(.6) brightness(.9)}
 #hintBox{background:var(--panel);border:1px solid var(--hint);border-radius:12px;padding:14px}
 #hintBox p{margin:0 0 12px}
 #hintBox .dlg-actions{margin-top:0}
+.games{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.games button{display:flex;flex-direction:column;align-items:center;gap:4px;border:1px solid var(--line);background:var(--panel);color:var(--muted);font:500 .85rem var(--sans);padding:10px 4px;border-radius:12px;cursor:pointer}
+.games button[aria-pressed="true"]{border-color:var(--ink);color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.gi svg{width:26px;height:26px;display:block}
+.g-tango .cell,.g-zip .cell{background:var(--cellbg);border:var(--thin-w) solid var(--line)}
+.g-tango .cell.given{background:var(--givenbg);cursor:default}
+.g-tango .cell svg{left:18%;top:18%;width:64%;height:64%}
+.cell[data-s="gs"] svg,.cell[data-s="gm"] svg{opacity:.45}
+.sign{position:absolute;z-index:2;transform:translate(-50%,-50%);width:clamp(15px,4.4vw,20px);height:clamp(15px,4.4vw,20px);border-radius:50%;background:var(--panel);border:1px solid var(--line);color:var(--ink);display:grid;place-items:center;font:700 clamp(11px,3.2vw,14px)/1 var(--sans);pointer-events:none}
+.sign.bad{background:var(--bad);color:#fff;border-color:var(--bad)}
+.g-zip .cell.on{background:var(--pathbg)}
+.zsvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.zpath{fill:none;stroke:var(--path);stroke-width:.4;stroke-linecap:round;stroke-linejoin:round}
+.zghost{fill:none;stroke:var(--hint);stroke-width:.16;stroke-dasharray:.18 .16;stroke-linecap:round;stroke-linejoin:round}
+.walls line{stroke:var(--ink);stroke-width:.1;stroke-linecap:round}
+.num circle{fill:var(--ink)}
+.num text{fill:var(--bg);font:700 .34px var(--sans);text-anchor:middle;dominant-baseline:central}
+#board.win .zpath{animation:glow 1s ease-in-out 2}
+@keyframes glow{50%{stroke-width:.55}}
 .cell.bad{background-image:repeating-linear-gradient(135deg,rgba(196,48,43,.35) 0 4px,transparent 4px 9px)!important}
 .cell.bad svg{--gold:#E86A5F;--crown-line:#7A1712}
 .cell.flash{animation:flash 1.1s ease-out}
@@ -99,17 +118,22 @@ h3{font-size:1rem;margin:16px 0 4px}
 <body>
 <main>
   <header>
-    <h1><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.2 8.2l4.6 4.3L12 4.8l4.2 7.7 4.6-4.3-1.9 10.3H5.1z" fill="#E3B341" stroke="#6B4A0E" stroke-width="1.3" stroke-linejoin="round"/><rect x="5.1" y="18.5" width="13.8" height="2.2" rx=".6" fill="#E3B341" stroke="#6B4A0E" stroke-width="1.1"/></svg>Krönchen</h1>
+    <h1 id="gameName"></h1>
     <button class="icon-btn" id="rulesBtn" aria-label="Spielregeln">?</button>
     <button class="icon-btn" id="setBtn" aria-label="Einstellungen und Statistik"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></button>
   </header>
+  <nav class="games" aria-label="Spiel wählen">
+    <button data-game="queens"><span class="gi" id="giQ"></span>Krönchen</button>
+    <button data-game="tango"><span class="gi" id="giT"></span>Sonne &amp; Mond</button>
+    <button data-game="zip"><span class="gi" id="giZ"></span>Linienzug</button>
+  </nav>
   <div class="seg" role="group" aria-label="Spielmodus">
     <button data-mode="level">Level</button>
     <button data-mode="daily">Tägliches Rätsel</button>
   </div>
   <div class="status"><span id="label"></span><span id="timer" aria-label="Zeit">00:00</span></div>
   <div id="board"></div>
-  <div class="meta"><span id="progress"></span><span>Tippen: X, Krone, leer</span></div>
+  <div class="meta"><span id="progress"></span><span id="tip"></span></div>
   <div class="tools">
     <button class="btn" id="hint">Hinweis</button>
     <button class="btn" id="reset">Brett leeren</button>
@@ -123,33 +147,25 @@ h3{font-size:1rem;margin:16px 0 4px}
 <div id="toast" role="status" aria-live="polite"></div>
 
 <dialog id="winDlg">
-  <h2>Gelöst</h2>
+  <h2 id="winTitle">Gelöst</h2>
   <div class="big" id="winTime"></div>
   <div id="winText"></div>
   <div class="dlg-actions"><button class="btn" id="winAlt">Schließen</button><button class="btn primary" id="winBtn">Weiter</button></div>
 </dialog>
 
 <dialog id="rulesDlg">
-  <h2>So wird gespielt</h2>
-  <p>Setze so viele Kronen, wie das Brett Zeilen hat.</p>
-  <ul>
-    <li>Jede Zeile hat genau eine Krone.</li>
-    <li>Jede Spalte hat genau eine Krone.</li>
-    <li>Jede Farbfläche hat genau eine Krone.</li>
-    <li>Zwei Kronen berühren sich nie, auch nicht über Eck.</li>
-  </ul>
-  <p>Einmal tippen setzt ein X für „hier sicher nicht“, zweimal tippen setzt eine Krone, ein drittes Mal leert das Feld. Mit dem Finger über mehrere Felder ziehen setzt X in Serie.</p>
-  <p>Jedes Rätsel hat genau eine Lösung und lässt sich ohne Raten lösen. Ein Hinweis zeigt dir den nächsten logischen Schritt und erklärt ihn. Jeder Hinweis kostet 15 Sekunden.</p>
+  <h2 id="rulesTitle">Regeln</h2>
+  <div id="rulesBody"></div>
   <div class="dlg-actions"><button class="btn primary" data-close>Los geht’s</button></div>
 </dialog>
 
 <dialog id="setDlg">
   <h2>Einstellungen</h2>
-  <label class="row"><span>Auto-X<small>Markiert Felder blass, die durch eine Krone gesperrt sind.</small></span><input type="checkbox" class="switch" id="autoX"></label>
-  <h3>Bestzeiten im Level-Modus</h3>
+  <label class="row"><span>Auto-X bei Krönchen<small>Markiert Felder blass, die durch eine Krone gesperrt sind.</small></span><input type="checkbox" class="switch" id="autoX"></label>
+  <h3 id="bestTitle">Bestzeiten</h3>
   <table id="bestTable"></table>
   <p id="stats" style="color:var(--muted);font-size:.9rem"></p>
-  <div class="dlg-actions"><button class="btn danger" id="wipe">Fortschritt löschen</button><button class="btn primary" data-close>Schließen</button></div>
+  <div class="dlg-actions"><button class="btn danger" id="wipe">Zurücksetzen</button><button class="btn primary" data-close>Schließen</button></div>
 </dialog>
 
 <script>
@@ -221,7 +237,7 @@ function connectedWithout(reg,n,a,skip){
 const PALETTE=['#F2B5A0','#B9D3A5','#A9C8E8','#E6D38A','#C7B3E3','#9ED6CC','#E8B4CF','#D6C2A8','#BFC6CF','#CDE08A'];
 
 // Erzeugt ein Rätsel mit genau einer Lösung
-function generate(n,rng){
+function queensGenerate(n,rng){
   for(let attempt=0;attempt<300;attempt++){
     const q=genQueens(n,rng),reg=growRegions(n,q,rng);
     let ok=false;
@@ -242,311 +258,518 @@ function generate(n,rng){
   }
   return null;
 }
+// ===== Sonne & Mond: Generator und Logik =====
+function tLines(n){const L=[];for(let r=0;r<n;r++){const a=[];for(let c=0;c<n;c++)a.push(r*n+c);L.push(a)}for(let c=0;c<n;c++){const a=[];for(let r=0;r<n;r++)a.push(r*n+c);L.push(a)}return L}
+function tSolution(n,rng){
+  const g=new Array(n*n).fill(0),h=n/2;
+  function ok(i,v){const r=(i/n)|0,c=i%n;
+    if(c>=2&&g[i-1]===v&&g[i-2]===v)return false;
+    if(r>=2&&g[i-n]===v&&g[i-2*n]===v)return false;
+    let a=0;for(let k=0;k<c;k++)if(g[r*n+k]===v)a++;if(a>=h)return false;
+    let b=0;for(let k=0;k<r;k++)if(g[k*n+c]===v)b++;if(b>=h)return false;
+    return true}
+  (function bt(i){if(i===n*n)return true;for(const v of shuffle([1,2],rng))if(ok(i,v)){g[i]=v;if(bt(i+1))return true;g[i]=0}return false})(0);
+  return g;
+}
+const T_NAME={1:{pl:'Sonnen',art:'eine Sonne'},2:{pl:'Monde',art:'ein Mond'}};
+function tValidLine(a,inner,h){
+  let s=0;for(const x of a)if(x===1)s++;if(s!==h)return false;
+  for(let p=0;p<a.length-2;p++)if(a[p]===a[p+1]&&a[p]===a[p+2])return false;
+  for(const [p,q,t] of inner)if((a[p]===a[q])!==(t==='e'))return false;
+  return true;
+}
+// Liefert den nächsten logischen Schritt oder null
+function tStep(n,v,signs,lines,adv){
+  const opp=x=>3-x,h=n/2,lineName=li=>li<n?'Zeile':'Spalte';
+  for(const [a,b,t] of signs){
+    for(const [x,y] of [[a,b],[b,a]])if(v[x]&&!v[y]){
+      const val=t==='e'?v[x]:opp(v[x]);
+      return{sets:[[y,val]],hl:[a,b],text:t==='e'?'Das = verlangt auf beiden Seiten dasselbe Symbol.':'Das × verlangt auf beiden Seiten verschiedene Symbole.'};
+    }
+  }
+  for(const L of lines){
+    for(let p=0;p<n-1;p++){const x=v[L[p]];if(x&&v[L[p+1]]===x){const s=[];
+      if(p>0&&!v[L[p-1]])s.push([L[p-1],opp(x)]);if(p+2<n&&!v[L[p+2]])s.push([L[p+2],opp(x)]);
+      if(s.length)return{sets:s,hl:[L[p],L[p+1]],text:'Zwei '+T_NAME[x].pl+' nebeneinander: Daneben muss jeweils '+T_NAME[opp(x)].art+' stehen, sonst wären es drei in Folge.'}}}
+    for(let p=0;p<n-2;p++){const x=v[L[p]];if(x&&v[L[p+2]]===x&&!v[L[p+1]])
+      return{sets:[[L[p+1],opp(x)]],hl:[L[p],L[p+2]],text:'Zwischen zwei '+T_NAME[x].pl+' muss '+T_NAME[opp(x)].art+' stehen, sonst wären es drei in Folge.'}}
+  }
+  for(let li=0;li<lines.length;li++){const L=lines[li];
+    for(const x of [1,2]){const cnt=L.filter(i=>v[i]===x).length,emp=L.filter(i=>!v[i]);
+      if(cnt===h&&emp.length)return{sets:emp.map(i=>[i,opp(x)]),hl:L,text:'Diese '+lineName(li)+' hat schon '+h+' '+T_NAME[x].pl+'. Auf alle freien Felder kommt '+T_NAME[opp(x)].art+'.'}}}
+  if(adv)for(let li=0;li<lines.length;li++){
+    const L=lines[li],emp=[];L.forEach((i,p)=>{if(!v[i])emp.push(p)});
+    if(!emp.length)continue;
+    const inner=signs.filter(([a,b])=>L.includes(a)&&L.includes(b)).map(([a,b,t])=>[L.indexOf(a),L.indexOf(b),t]);
+    let common=null;
+    for(let m=0;m<(1<<emp.length);m++){
+      const arr=L.map(i=>v[i]);emp.forEach((p,k)=>arr[p]=(m>>k&1)?1:2);
+      if(!tValidLine(arr,inner,h))continue;
+      if(!common)common=arr;else for(const p of emp)if(common[p]!==arr[p])common[p]=0;
+    }
+    if(common){const p=emp.find(p=>common[p]);
+      if(p!==undefined)return{sets:[[L[p],common[p]]],hl:L,text:'Spielst du alle erlaubten Möglichkeiten für diese '+lineName(li)+' durch, steht auf dem markierten Feld immer '+T_NAME[common[p]].art+'.'}}
+  }
+  return null;
+}
+function tangoGenerate(n,diff,rng){
+  const sol=tSolution(n,rng),lines=tLines(n),adv=diff===2,minGiven=diff===0?12:diff===1?5:0;
+  const edges=[];for(let r=0;r<n;r++)for(let c=0;c<n;c++){const i=r*n+c;if(c<n-1)edges.push([i,i+1]);if(r<n-1)edges.push([i,i+n])}
+  shuffle(edges,rng);
+  const minSigns=n===6?6:10,allSigns=edges.slice(0,n===6?14:22).map(([a,b])=>[a,b,sol[a]===sol[b]?'e':'x']);
+  const given=new Array(n*n).fill(true),signOn=allSigns.map(()=>true);
+  let gCount=n*n;
+  const solvable=()=>{const v=sol.map((x,i)=>given[i]?x:0),sg=allSigns.filter((s,k)=>signOn[k]);
+    for(;;){const s=tStep(n,v,sg,lines,adv);if(!s)break;for(const [i,x] of s.sets)v[i]=x}
+    return v.every(x=>x)};
+  let sCount=allSigns.length;
+  const items=shuffle([...Array(n*n).keys()].map(i=>['c',i]),rng).concat(shuffle(allSigns.map((s,k)=>['s',k]),rng));
+  for(const [t,k] of items){
+    if(t==='c'){if(gCount<=minGiven)continue;given[k]=false;if(solvable())gCount--;else given[k]=true}
+    else{if(sCount<=minSigns)continue;signOn[k]=false;if(solvable())sCount--;else signOn[k]=true}
+  }
+  return{sol,given,signs:allSigns.filter((s,k)=>signOn[k])};
+}
+// ===== Linienzug: Generator und Löser =====
+function ek(a,b){return a<b?a*1000+b:b*1000+a}
+function zHamPath(n,rng){
+  let path=[];for(let r=0;r<n;r++)for(let c=0;c<n;c++)path.push(r*n+(r%2?n-1-c:c));
+  const it=n*n*40;
+  for(let t=0;t<it;t++){
+    if(rng()<.5)path.reverse();
+    const end=path[path.length-1],ns=nb4(end,n),nb=ns[Math.floor(rng()*ns.length)],idx=path.indexOf(nb);
+    if(idx===path.length-2)continue;
+    path=path.slice(0,idx+1).concat(path.slice(idx+1).reverse());
+  }
+  return path;
+}
+function zCount(n,nums,K,walls,limit,budget){
+  const N=n*n,adj=[];
+  for(let i=0;i<N;i++)adj.push(nb4(i,n).filter(j=>!walls.has(ek(i,j))));
+  let start=-1,end=-1;for(let i=0;i<N;i++){if(nums[i]===1)start=i;if(nums[i]===K)end=i}
+  const vis=new Uint8Array(N),path=[start],sols=[];let nodes=0,over=false;vis[start]=1;
+  const seen=new Uint8Array(N),st=[];
+  function prune(cur,cnt){
+    const rem=N-cnt;if(!rem)return true;
+    for(let u=0;u<N;u++){if(vis[u])continue;let d=0;for(const y of adj[u])if(!vis[y]||y===cur)d++;if(d===0||(d===1&&u!==end))return false}
+    seen.fill(0);st.length=0;st.push(end);seen[end]=1;let c=1;
+    while(st.length){const x=st.pop();for(const y of adj[x])if(!vis[y]&&!seen[y]){seen[y]=1;c++;st.push(y)}}
+    return c===rem;
+  }
+  (function dfs(cur,cnt,next){
+    if(sols.length>=limit||over)return;
+    if(++nodes>budget){over=true;return}
+    if(cnt===N){if(next>K)sols.push(path.slice());return}
+    for(const y of adj[cur]){
+      if(vis[y])continue;const k=nums[y];
+      if(k&&k!==next)continue;if(k===K&&cnt+1!==N)continue;
+      vis[y]=1;path.push(y);
+      if(prune(y,cnt+1))dfs(y,cnt+1,k?next+1:next);
+      vis[y]=0;path.pop();
+      if(sols.length>=limit||over)return;
+    }
+  })(start,1,2);
+  return{status:sols.length>=limit?'multi':over?'budget':sols.length===1?'unique':'none',sols};
+}
+function zipGenerate(n,rng){
+  const N=n*n;
+  for(let attempt=0;attempt<60;attempt++){
+    const path=zHamPath(n,rng),idxs=new Set([0,N-1]),walls=new Set();
+    const extra=Math.max(1,Math.round(N/10));
+    while(idxs.size<2+extra)idxs.add(1+Math.floor(rng()*(N-2)));
+    let res,nums,K;
+    for(let it=0;it<80;it++){
+      const sorted=[...idxs].sort((a,b)=>a-b);K=sorted.length;nums=new Array(N).fill(0);
+      sorted.forEach((d,k)=>nums[path[d]]=k+1);
+      res=zCount(n,nums,K,walls,2,60000);
+      if(res.status==='unique')break;
+      if(res.status==='multi'){
+        const alt=res.sols.find(s=>s.some((c,k)=>c!==path[k]));let d=0;while(alt[d]===path[d])d++;
+        if(rng()<.45)walls.add(ek(alt[d-1],alt[d]));else idxs.add(d);
+      }else idxs.add(1+Math.floor(rng()*(N-2)));
+    }
+    if(res.status==='unique')return{sol:path,nums,K,walls:[...walls].map(k=>[Math.floor(k/1000),k%1000])};
+  }
+  return null;
+}
 
-
-// ===== App =====
+// ===== Rahmen =====
 const $=s=>document.querySelector(s);
 const store={
   get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
   set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 };
-let settings=store.get('kr_settings',{autoX:true});
-let progress=store.get('kr_progress',{level:1});
-let best=store.get('kr_best',{});
-let dailyLog=store.get('kr_daily',{});
-let mode=store.get('kr_mode','level');
-let S=null,runStart=null,view={attacked:new Uint8Array(0),conflict:new Set()},drag=null;
-
 const CROWN='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.2 8.2l4.6 4.3L12 4.8l4.2 7.7 4.6-4.3-1.9 10.3H5.1z" fill="var(--gold)" stroke="var(--crown-line)" stroke-width="1.3" stroke-linejoin="round"/><rect x="5.1" y="18.5" width="13.8" height="2.2" rx=".6" fill="var(--gold)" stroke="var(--crown-line)" stroke-width="1.1"/><circle cx="12" cy="4.4" r="1.3" fill="var(--gold)" stroke="var(--crown-line)" stroke-width="1"/></svg>';
-const DAILY_SIZE=[9,6,7,7,8,8,9]; // So, Mo … Sa
+const SUN='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="#F5A524" stroke="#B4690E" stroke-width="1.4"/><circle cx="12" cy="12" r="4.6" fill="#FFC857"/></svg>';
+const MOON='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.2 3.6a8.6 8.6 0 1 0 5.2 14.1A7.4 7.4 0 0 1 15.2 3.6z" fill="#5B8DEF" stroke="#2A4F9E" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+const PATHICON='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v7H5v7h14" fill="none" stroke="#3E63DD" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="5" cy="5" r="3" fill="#1B2238"/><circle cx="19" cy="19" r="3" fill="#1B2238"/></svg>';
 const PENALTY=15000;
+const THICK='var(--edge-w) solid var(--edge)',THIN='var(--thin-w) solid var(--thin)';
 
-function sizeFor(l){return l<=3?5:l<=8?6:l<=15?7:l<=25?8:l<=40?9:10}
 function dayKey(d=new Date()){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function fmt(ms){const s=Math.floor(ms/1000),m=Math.floor(s/60);return String(m).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
-function sizeLabel(n){return n+' × '+n}
+function sz(n){return n+' × '+n}
+function rc(i){return[(i/S.n)|0,i%S.n]}
+function near(i,j){const[a,b]=rc(i),[c,d]=rc(j);return Math.abs(a-c)+Math.abs(b-d)===1}
+
+let settings=store.get('kr_settings',{autoX:true});
+let mode=store.get('kr_mode','level');
+let S=null,H=null,G=null,runStart=null,dragging=false;
+const board=$('#board');
+
+// ===== Spiel 1: Krönchen =====
+const Queens={
+  id:'queens',name:'Krönchen',prefix:'kr',icon:CROWN,tip:'Tippen: X, Krone, leer',resetLabel:'Brett leeren',
+  rules:`<ul><li>Jede Zeile hat genau eine Krone.</li><li>Jede Spalte hat genau eine Krone.</li><li>Jede Farbfläche hat genau eine Krone.</li><li>Zwei Kronen berühren sich nie, auch nicht über Eck.</li></ul>
+  <p>Einmal tippen setzt ein X für „hier sicher nicht“, zweimal tippen eine Krone, ein drittes Mal leert das Feld. Über mehrere Felder ziehen setzt X in Serie.</p>`,
+  levelParams:l=>({n:l<=3?5:l<=8?6:l<=15?7:l<=25?8:l<=40?9:10}),
+  dailyParams:d=>({n:[9,6,7,7,8,8,9][d.getDay()]}),
+  create(p,rng){const g=queensGenerate(p.n,rng);return{n:p.n,reg:g.reg,sol:g.sol,colors:g.colors,marks:new Array(p.n*p.n).fill(0)}},
+  label:s=>sz(s.n),bestKey:s=>String(s.n),bestKeys:['5','6','7','8','9','10'],bestLabel:k=>sz(+k),
+  view:{attacked:[],conflict:new Set(),crowns:[]},
+  build(){
+    const n=S.n;board.innerHTML='';
+    for(let i=0;i<n*n;i++){
+      const[r,c]=rc(i),g=S.reg[i],d=document.createElement('button');
+      d.className='cell';d.dataset.i=i;d.style.background=S.colors[g];d.style.setProperty('--row',r);
+      d.style.borderTop=(r===0||S.reg[i-n]!==g)?THICK:THIN;d.style.borderLeft=(c===0||S.reg[i-1]!==g)?THICK:THIN;
+      d.style.borderBottom=(r===n-1||S.reg[i+n]!==g)?THICK:THIN;d.style.borderRight=(c===n-1||S.reg[i+1]!==g)?THICK:THIN;
+      d.setAttribute('aria-label','Zeile '+(r+1)+', Spalte '+(c+1));board.appendChild(d);
+    }
+  },
+  compute(){
+    const n=S.n,N=n*n,attacked=new Uint8Array(N),conflict=new Set(),crowns=[];
+    for(let i=0;i<N;i++)if(S.marks[i]===2)crowns.push(i);
+    for(const i of crowns)for(let j=0;j<N;j++){if(j===i)continue;
+      const[r,c]=rc(i),[r2,c2]=rc(j);
+      if(r2===r||c2===c||S.reg[j]===S.reg[i]||(Math.abs(r2-r)<=1&&Math.abs(c2-c)<=1)){attacked[j]=1;if(S.marks[j]===2)conflict.add(i)}}
+    return{crowns,attacked,conflict};
+  },
+  paint(){
+    const v=this.view=this.compute(),cells=board.children;
+    for(let i=0;i<cells.length;i++){
+      const el=cells[i],m=S.marks[i],tg=H&&H.tgt.has(i);
+      let st=m===2?'crown':m===1?'x':(settings.autoX&&v.attacked[i]?'auto':'');
+      if(tg&&H.kind==='crown'&&m!==2)st='gc';else if(tg&&H.kind==='x'&&m===0)st='gx';
+      if(el.dataset.s!==st){el.dataset.s=st;el.innerHTML=(st==='crown'||st==='gc')?CROWN:''}
+      el.classList.toggle('bad',m===2&&v.conflict.has(i));
+      el.classList.toggle('tgt',!!tg);el.classList.toggle('dim',!!H&&!H.hl.has(i)&&!tg);
+    }
+  },
+  progress(){return this.view.crowns.length+' von '+S.n+' Kronen'},
+  qd:null,
+  down(i){this.qd={start:i,last:i,moved:false,mode:null}},
+  move(i){const d=this.qd;if(!d||i===d.last)return;
+    if(!d.moved){d.moved=true;d.mode=S.marks[d.start]===1?'clear':'x';this.dragSet(d.start)}
+    d.last=i;this.dragSet(i);paint()},
+  dragSet(i){if(this.qd.mode==='x'&&S.marks[i]===0)S.marks[i]=1;else if(this.qd.mode==='clear'&&S.marks[i]===1)S.marks[i]=0},
+  up(){const d=this.qd;this.qd=null;if(d&&!d.moved)this.tap(d.start)},
+  key(i){this.tap(i)},
+  tap(i){const m=S.marks[i];S.marks[i]=m===0?((settings.autoX&&this.view.attacked[i])?2:1):m===1?2:0},
+  won(){return this.view.crowns.length===S.n&&!this.view.conflict.size},
+  clear(){S.marks.fill(0)},
+  hint(){
+    const n=S.n,N=n*n,rows=[],cols=[],regs=[];
+    for(let k=0;k<n;k++){rows.push([]);cols.push([]);regs.push([])}
+    for(let i=0;i<N;i++){rows[(i/n)|0].push(i);cols[i%n].push(i);regs[S.reg[i]].push(i)}
+    const setM=(cells,v)=>()=>{for(const i of cells)S.marks[i]=v};
+    for(let i=0;i<N;i++)if(S.marks[i]===2&&S.sol[(i/n)|0]!==i%n)
+      return{text:'Diese Krone führt nicht zur Lösung und wird entfernt.',hl:[i],tgt:[i],kind:'clear',label:'Entfernen',apply:setM([i],0)};
+    for(let r=0;r<n;r++){const i=r*n+S.sol[r];if(S.marks[i]===1)
+      return{text:'Dieses X steht auf einem Feld, das noch gebraucht wird. Es wird entfernt.',hl:[i],tgt:[i],kind:'clear',label:'Entfernen',apply:setM([i],0)}}
+    const att=this.compute().attacked,cand=new Uint8Array(N);
+    for(let i=0;i<N;i++)cand[i]=(S.marks[i]===0&&!att[i])?1:0;
+    const crowned=u=>u.some(i=>S.marks[i]===2),cands=u=>u.filter(i=>cand[i]);
+    const X=(text,hl,tgt)=>({text,hl,tgt,kind:'x',label:'X setzen',apply:setM(tgt,1)});
+    const T={reg:{u:regs,one:'Farbfläche',many:'Farbflächen',of:i=>S.reg[i]},row:{u:rows,one:'Zeile',many:'Zeilen',of:i=>(i/n)|0},col:{u:cols,one:'Spalte',many:'Spalten',of:i=>i%n}};
+    for(const t of [T.reg,T.row,T.col])for(const u of t.u){if(crowned(u))continue;const c=cands(u);
+      if(c.length===1)return{text:'In dieser '+t.one+' ist nur noch ein Feld frei. Dort muss die Krone hin.',hl:u,tgt:c,kind:'crown',label:'Krone setzen',apply:setM(c,2)}}
+    if(!settings.autoX){const t=[];for(let i=0;i<N;i++)if(S.marks[i]===0&&att[i])t.push(i);
+      if(t.length)return X('Diese Felder sind durch deine Kronen bereits gesperrt. Markiere sie mit X.',t,t)}
+    const NUM=['','eine','zwei','drei'];
+    const combos=(arr,k,f)=>{let res=null;const p=[];(function go(s){if(res)return;if(p.length===k){res=f(p.slice());return}for(let x=s;x<arr.length&&!res;x++){p.push(arr[x]);go(x+1);p.pop()}})(0);return res};
+    const confine=(k,A,B)=>combos(A.u.filter(u=>!crowned(u)&&cands(u).length),k,pick=>{
+      const cs=[].concat(...pick.map(cands)),bs=new Set(cs.map(B.of));if(bs.size!==k)return null;
+      const inA=new Set([].concat(...pick)),tgt=[];for(const b of bs)for(const i of B.u[b])if(cand[i]&&!inA.has(i))tgt.push(i);
+      if(!tgt.length)return null;
+      return X(k===1?'Alle freien Felder dieser '+A.one+' liegen in einer '+B.one+'. Die Krone dieser '+B.one+' gehört also zur '+A.one+', alle anderen Felder der '+B.one+' fallen weg.'
+        :'Die freien Felder dieser '+NUM[k]+' '+A.many+' liegen in nur '+NUM[k]+' '+B.many+'. Deren Kronen kommen also aus diesen '+A.many+', alle anderen Felder dort fallen weg.',[].concat(...pick),tgt)});
+    const pairs=[[T.reg,T.row],[T.reg,T.col],[T.row,T.reg],[T.col,T.reg]];
+    for(const [A,B] of pairs){const h=confine(1,A,B);if(h)return h}
+    const blocks=(i,j)=>{const[r,c]=rc(i),[r2,c2]=rc(j);return r===r2||c===c2||S.reg[i]===S.reg[j]||(Math.abs(r-r2)<=1&&Math.abs(c-c2)<=1)};
+    for(const t of [T.reg,T.row,T.col])for(const u of t.u){if(crowned(u))continue;const uc=cands(u),inU=new Set(u),tgt=[];
+      for(let i=0;i<N;i++)if(cand[i]&&!inU.has(i)&&uc.every(j=>blocks(i,j)))tgt.push(i);
+      if(tgt.length)return X('Eine Krone auf den markierten Feldern würde alle freien Felder dieser '+t.one+' blockieren. Dort kann also keine Krone stehen.',u,tgt)}
+    for(const k of [2,3])for(const [A,B] of pairs){const h=confine(k,A,B);if(h)return h}
+    const size=new Array(n).fill(0);S.reg.forEach(g=>size[g]++);
+    const open=S.sol.map((c,r)=>r*n+c).filter(i=>S.marks[i]!==2).sort((a,b)=>size[S.reg[a]]-size[S.reg[b]]);
+    return{text:'Hier gibt es keinen einfachen nächsten Schritt mehr. Auf dieses Feld gehört eine Krone.',hl:regs[S.reg[open[0]]],tgt:[open[0]],kind:'crown',label:'Krone setzen',apply:setM([open[0]],2)};
+  }
+};
+
+// ===== Spiel 2: Sonne & Mond =====
+const DIFF=['leicht','mittel','schwer'];
+const Tango={
+  id:'tango',name:'Sonne & Mond',prefix:'tg',icon:SUN,tip:'Tippen: Sonne, Mond, leer',resetLabel:'Brett leeren',
+  rules:`<ul><li>Fülle jedes Feld mit einer Sonne oder einem Mond.</li><li>Jede Zeile und jede Spalte hat gleich viele Sonnen und Monde.</li><li>Höchstens zwei gleiche Symbole stehen direkt neben- oder untereinander.</li><li>Felder mit = bekommen dasselbe Symbol, Felder mit × verschiedene.</li></ul>
+  <p>Tippen wechselt zwischen Sonne, Mond und leer. Grau hinterlegte Felder sind vorgegeben.</p>`,
+  levelParams:l=>l<=5?{n:6,diff:0}:l<=15?{n:6,diff:1}:l<=30?{n:6,diff:2}:{n:8,diff:2},
+  dailyParams:d=>({n:6,diff:(d.getDay()===0||d.getDay()===6)?2:1}),
+  create(p,rng){const g=tangoGenerate(p.n,p.diff,rng);return{n:p.n,diff:p.diff,sol:g.sol,given:g.given,signs:g.signs,marks:g.sol.map((v,i)=>g.given[i]?v:0)}},
+  label:s=>sz(s.n)+', '+DIFF[s.diff],bestKey:s=>s.n+'-'+s.diff,bestKeys:['6-0','6-1','6-2','8-2'],bestLabel:k=>{const[a,b]=k.split('-');return sz(+a)+', '+DIFF[b]},
+  signEls:[],
+  build(){
+    const n=S.n;board.innerHTML='';
+    for(let i=0;i<n*n;i++){const[r,c]=rc(i),d=document.createElement('button');
+      d.className='cell'+(S.given[i]?' given':'');d.dataset.i=i;d.style.setProperty('--row',r);
+      d.setAttribute('aria-label','Zeile '+(r+1)+', Spalte '+(c+1));board.appendChild(d)}
+    this.signEls=S.signs.map(([a,b,t])=>{const[r,c]=rc(a),s=document.createElement('span');
+      s.className='sign';s.textContent=t==='e'?'=':'×';
+      if(b===a+1){s.style.left=((c+1)/n*100)+'%';s.style.top=((r+.5)/n*100)+'%'}
+      else{s.style.left=((c+.5)/n*100)+'%';s.style.top=((r+1)/n*100)+'%'}
+      board.appendChild(s);return s});
+  },
+  errors(){
+    const n=S.n,h=n/2,v=S.marks,bad=new Set(),badSign=new Set();
+    for(const L of tLines(n)){
+      for(let p=0;p<n-2;p++)if(v[L[p]]&&v[L[p]]===v[L[p+1]]&&v[L[p]]===v[L[p+2]])[L[p],L[p+1],L[p+2]].forEach(i=>bad.add(i));
+      for(const x of [1,2])if(L.filter(i=>v[i]===x).length>h)L.forEach(i=>{if(v[i]===x)bad.add(i)});
+    }
+    S.signs.forEach(([a,b,t],k)=>{if(v[a]&&v[b]&&((v[a]===v[b])!==(t==='e')))badSign.add(k)});
+    return{bad,badSign};
+  },
+  paint(){
+    const e=this.errors(),cells=board.querySelectorAll('.cell'),gh=H&&H.sets?new Map(H.sets):null;
+    cells.forEach((el,i)=>{const m=S.marks[i],tg=H&&H.tgt.has(i);
+      let st=m===1?'sun':m===2?'moon':'';
+      if(gh&&gh.has(i)&&!m)st=gh.get(i)===1?'gs':'gm';
+      if(el.dataset.s!==st){el.dataset.s=st;el.innerHTML=(st==='sun'||st==='gs')?SUN:(st==='moon'||st==='gm')?MOON:''}
+      el.classList.toggle('bad',e.bad.has(i));el.classList.toggle('tgt',!!tg);el.classList.toggle('dim',!!H&&!H.hl.has(i)&&!tg)});
+    this.signEls.forEach((s,k)=>s.classList.toggle('bad',e.badSign.has(k)));
+  },
+  progress(){return S.marks.filter(x=>x).length+' von '+S.n*S.n+' Feldern'},
+  down(i){if(S.given[i]){toast('Dieses Feld ist vorgegeben.');return}S.marks[i]=(S.marks[i]+1)%3;paint()},
+  move(){},up(){},
+  key(i){this.down(i)},
+  won(){return S.marks.every((x,i)=>x===S.sol[i])},
+  clear(){S.marks=S.sol.map((v,i)=>S.given[i]?v:0)},
+  hint(){
+    const n=S.n,N=n*n;
+    for(let i=0;i<N;i++)if(!S.given[i]&&S.marks[i]&&S.marks[i]!==S.sol[i])
+      return{text:'Dieses Symbol passt nicht zur Lösung und wird entfernt.',hl:[i],tgt:[i],label:'Entfernen',apply:()=>{S.marks[i]=0}};
+    const st=tStep(n,S.marks.slice(),S.signs,tLines(n),true);
+    if(st){const tgt=st.sets.map(x=>x[0]);
+      return{text:st.text,hl:st.hl.concat(tgt),tgt,sets:st.sets,label:'Setzen',apply:()=>{for(const [i,v] of st.sets)S.marks[i]=v}}}
+    const i=S.marks.findIndex(x=>!x);
+    return{text:'Hier gibt es keinen einfachen nächsten Schritt mehr. Dieses Feld ist aufgedeckt.',hl:[i],tgt:[i],sets:[[i,S.sol[i]]],label:'Setzen',apply:()=>{S.marks[i]=S.sol[i]}};
+  }
+};
+
+// ===== Spiel 3: Linienzug =====
+const Zip={
+  id:'zip',name:'Linienzug',prefix:'zp',icon:PATHICON,tip:'Von der 1 aus ziehen',resetLabel:'Linie löschen',
+  rules:`<ul><li>Zieh eine Linie von der 1 bis zur höchsten Zahl.</li><li>Die Zahlen werden der Reihe nach besucht.</li><li>Die Linie läuft durch jedes Feld genau einmal.</li><li>Dicke Striche sind Wände, durch die die Linie nicht darf.</li></ul>
+  <p>Zieh mit dem Finger von der 1 aus. Fährst du zurück, wird die Linie zurückgenommen. Tippen auf ein Feld der Linie kürzt sie bis dorthin.</p>`,
+  levelParams:l=>({n:l<=4?5:l<=12?6:l<=25?7:8}),
+  dailyParams:d=>({n:[7,6,6,6,7,7,7][d.getDay()]}),
+  create(p,rng){const g=zipGenerate(p.n,rng);return{n:p.n,sol:g.sol,nums:g.nums,K:g.K,walls:g.walls,path:[]}},
+  label:s=>sz(s.n),bestKey:s=>String(s.n),bestKeys:['5','6','7','8'],bestLabel:k=>sz(+k),
+  wallSet:new Set(),
+  build(){
+    const n=S.n;board.innerHTML='';this.wallSet=new Set(S.walls.map(([a,b])=>ek(a,b)));
+    for(let i=0;i<n*n;i++){const[r,c]=rc(i),d=document.createElement('button');
+      d.className='cell';d.dataset.i=i;d.setAttribute('aria-label','Zeile '+(r+1)+', Spalte '+(c+1)+(S.nums[i]?', Zahl '+S.nums[i]:''));board.appendChild(d)}
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('viewBox','0 0 '+n+' '+n);svg.setAttribute('class','zsvg');svg.setAttribute('aria-hidden','true');
+    let w='';for(const [a,b] of S.walls){const[r,c]=rc(a);
+      w+=b===a+1?`<line x1="${c+1}" y1="${r}" x2="${c+1}" y2="${r+1}"/>`:`<line x1="${c}" y1="${r+1}" x2="${c+1}" y2="${r+1}"/>`}
+    let nm='';for(let i=0;i<n*n;i++)if(S.nums[i]){const[r,c]=rc(i);
+      nm+=`<g class="num"><circle cx="${c+.5}" cy="${r+.5}" r=".31"/><text x="${c+.5}" y="${r+.5}">${S.nums[i]}</text></g>`}
+    svg.innerHTML=`<polyline class="zghost" points=""/><polyline class="zpath" points=""/><g class="walls">${w}</g>${nm}`;
+    board.appendChild(svg);
+  },
+  pts(list){return list.map(i=>{const[r,c]=rc(i);return(c+.5)+','+(r+.5)}).join(' ')},
+  paint(){
+    const P=S.path,on=new Set(P);
+    board.querySelectorAll('.cell').forEach((el,i)=>{const tg=H&&H.tgt.has(i);
+      el.classList.toggle('on',on.has(i));el.classList.toggle('tgt',!!tg);el.classList.remove('dim')});
+    board.querySelector('.zpath').setAttribute('points',this.pts(P.length===1?[P[0],P[0]]:P));
+    const g=H&&H.seg?(P.length?[P[P.length-1]]:[]).concat(H.seg):[];
+    board.querySelector('.zghost').setAttribute('points',this.pts(g.length===1?[g[0],g[0]]:g));
+  },
+  progress(){return S.path.length+' von '+S.n*S.n+' Feldern'},
+  next(){let m=0;for(const c of S.path)if(S.nums[c])m=S.nums[c];return m+1},
+  extend(i){
+    const P=S.path;if(!P.length){if(S.nums[i]===1)P.push(i);return}
+    const last=P[P.length-1];
+    if(P.includes(i)||!near(last,i)||this.wallSet.has(ek(last,i))||S.nums[last]===S.K)return;
+    const k=S.nums[i];if(k&&k!==this.next())return;
+    P.push(i);
+  },
+  down(i){const P=S.path,idx=P.indexOf(i);if(idx>=0)P.length=idx+1;else this.extend(i);paint()},
+  move(i){const P=S.path;if(P.length>=2&&i===P[P.length-2])P.pop();else this.extend(i);paint()},
+  up(){},
+  key(i){this.down(i)},
+  won(){return S.path.length===S.n*S.n&&S.nums[S.path[S.path.length-1]]===S.K},
+  clear(){S.path=[]},
+  hint(){
+    const P=S.path,sol=S.sol;let d=0;while(d<P.length&&P[d]===sol[d])d++;
+    if(d<P.length){const rest=P.slice(d);
+      return{text:'Ab dem markierten Feld weicht deine Linie von der Lösung ab.',hl:rest,tgt:[P[d]],label:'Zurücknehmen',apply:()=>{S.path.length=d}}}
+    const seg=[];for(let k=P.length;k<sol.length&&seg.length<5;k++){seg.push(sol[k]);if(k>0&&S.nums[sol[k]])break}
+    return{text:P.length?'So geht es weiter: Folge der gestrichelten Linie.':'Starte bei der 1 und folge der gestrichelten Linie.',hl:seg,tgt:seg,seg,label:'Linie ziehen',apply:()=>{S.path.push(...seg)}};
+  }
+};
+
+const GAMES={queens:Queens,tango:Tango,zip:Zip};
+G=GAMES[store.get('rk_game','queens')]||Queens;
+const K=k=>G.prefix+'_'+k;
+const getProg=()=>store.get(K('progress'),{level:1});
 
 // ---- Timer ----
 function elapsedNow(){return S?S.elapsed+(runStart!==null?Date.now()-runStart:0):0}
 function startTimer(){if(S&&!S.solved&&runStart===null&&!document.hidden)runStart=Date.now()}
-function pauseTimer(){if(runStart!==null){S.elapsed+=Date.now()-runStart;runStart=null}}
+function pauseTimer(){if(runStart!==null&&S){S.elapsed+=Date.now()-runStart}runStart=null}
 setInterval(()=>{if(S)$('#timer').textContent=fmt(elapsedNow())},250);
 document.addEventListener('visibilitychange',()=>{if(document.hidden){pauseTimer();save()}else startTimer()});
 window.addEventListener('pagehide',()=>{pauseTimer();save()});
 
-// ---- Speichern / Laden ----
-function save(){if(!S)return;const copy={...S,elapsed:elapsedNow()};store.set(S.mode==='level'?'kr_game_level':'kr_game_daily',copy)}
+function save(){if(!S)return;store.set(K(S.mode==='level'?'game_level':'game_daily'),{...S,elapsed:elapsedNow()})}
 
 function loadGame(){
-  pauseTimer();H=null;$('#hintBox').hidden=true;$('.tools').hidden=false;
-  $('#board').innerHTML='<p class="building">Rätsel wird gebaut …</p>';
+  pauseTimer();S=null;hideHint(true);
+  board.className='g-'+G.id;board.innerHTML='<p class="building">Rätsel wird gebaut …</p>';
   setTimeout(()=>{
+    const prog=getProg();
     if(mode==='level'){
-      const g=store.get('kr_game_level',null);
-      if(g&&g.level===progress.level&&!g.solved)S=g;
-      else{
-        const n=sizeFor(progress.level);
-        const p=generate(n,mulberry32((Math.random()*4294967296)>>>0));
-        S={mode:'level',level:progress.level,n,reg:p.reg,sol:p.sol,colors:p.colors,marks:new Array(n*n).fill(0),elapsed:0,hints:0,solved:false};
-      }
+      const g=store.get(K('game_level'),null);
+      if(g&&g.level===prog.level&&!g.solved)S=g;
+      else S={mode:'level',level:prog.level,...G.create(G.levelParams(prog.level),mulberry32((Math.random()*4294967296)>>>0)),elapsed:0,hints:0,solved:false};
     }else{
-      const key=dayKey(),g=store.get('kr_game_daily',null);
+      const key=dayKey(),g=store.get(K('game_daily'),null);
       if(g&&g.day===key)S=g;
-      else{
-        const n=DAILY_SIZE[new Date().getDay()];
-        const p=generate(n,mulberry32(hashStr('kroenchen-'+key)));
-        S={mode:'daily',day:key,n,reg:p.reg,sol:p.sol,colors:p.colors,marks:new Array(n*n).fill(0),elapsed:0,hints:0,solved:false};
-      }
+      else S={mode:'daily',day:key,...G.create(G.dailyParams(new Date()),mulberry32(hashStr(G.id+'-'+key))),elapsed:0,hints:0,solved:false};
     }
-    save();buildBoard();paint();updateHeader();startTimer();
+    save();board.style.setProperty('--n',S.n);G.build();paint();updateHeader();startTimer();
   },30);
 }
 
-// ---- Brett ----
-function buildBoard(){
-  const b=$('#board'),n=S.n;
-  b.innerHTML='';b.style.setProperty('--n',n);b.classList.remove('win');
-  const thick='var(--edge-w) solid var(--edge)',thin='var(--thin-w) solid var(--thin)';
-  for(let i=0;i<n*n;i++){
-    const r=(i/n)|0,c=i%n,g=S.reg[i],d=document.createElement('button');
-    d.className='cell';d.dataset.i=i;d.style.background=S.colors[g];d.style.setProperty('--row',r);
-    d.style.borderTop=(r===0||S.reg[i-n]!==g)?thick:thin;
-    d.style.borderLeft=(c===0||S.reg[i-1]!==g)?thick:thin;
-    d.style.borderBottom=(r===n-1||S.reg[i+n]!==g)?thick:thin;
-    d.style.borderRight=(c===n-1||S.reg[i+1]!==g)?thick:thin;
-    d.setAttribute('aria-label','Zeile '+(r+1)+', Spalte '+(c+1));
-    b.appendChild(d);
-  }
-}
+function paint(){if(!S)return;G.paint();$('#progress').textContent=G.progress()}
 
-function compute(){
-  const n=S.n,N=n*n,attacked=new Uint8Array(N),conflict=new Set(),crowns=[];
-  for(let i=0;i<N;i++)if(S.marks[i]===2)crowns.push(i);
-  for(const i of crowns){
-    const r=(i/n)|0,c=i%n,g=S.reg[i];
-    for(let j=0;j<N;j++){
-      if(j===i)continue;
-      const r2=(j/n)|0,c2=j%n;
-      if(r2===r||c2===c||S.reg[j]===g||(Math.abs(r2-r)<=1&&Math.abs(c2-c)<=1)){
-        attacked[j]=1;if(S.marks[j]===2)conflict.add(i);
-      }
-    }
-  }
-  return{crowns,attacked,conflict};
-}
-
-function paint(){
-  view=compute();
-  const cells=$('#board').children;
-  for(let i=0;i<cells.length;i++){
-    const el=cells[i],m=S.marks[i];
-    let state=m===2?'crown':m===1?'x':(settings.autoX&&view.attacked[i]?'auto':'');
-    const tg=H&&H.tgt.has(i);
-    if(tg&&H.kind==='crown'&&m!==2)state='gc';
-    else if(tg&&H.kind==='x'&&m===0)state='gx';
-    if(el.dataset.s!==state){el.dataset.s=state;el.innerHTML=(state==='crown'||state==='gc')?CROWN:''}
-    el.classList.toggle('bad',m===2&&view.conflict.has(i));
-    el.classList.toggle('tgt',!!tg);
-    el.classList.toggle('dim',!!H&&!H.hl.has(i)&&!tg);
-  }
-  $('#progress').textContent=view.crowns.length+' von '+S.n+' Kronen';
-}
+function streak(){const log=store.get(K('daily'),{});let d=new Date(),n=0;
+  if(!log[dayKey(d)])d.setDate(d.getDate()-1);while(log[dayKey(d)]){n++;d.setDate(d.getDate()-1)}return n}
 
 function updateHeader(){
+  $('#gameName').innerHTML=G.icon+G.name;document.title=G.name+' | Rätselkiste';
+  document.querySelectorAll('.games button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.game===G.id));
   document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===mode));
-  if(S.mode==='level')$('#label').textContent='Level '+S.level+', '+sizeLabel(S.n);
-  else $('#label').textContent=new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})+', '+sizeLabel(S.n);
-  const note=$('#note');
+  $('#tip').textContent=G.tip;$('#reset').textContent=G.resetLabel;
+  if(!S)return;
+  $('#label').textContent=S.mode==='level'?'Level '+S.level+', '+G.label(S):new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})+', '+G.label(S);
+  const best=store.get(K('best'),{}),bk=G.bestKey(S),note=$('#note');
   if(S.mode==='daily'&&S.solved)note.textContent='Heute gelöst in '+fmt(S.elapsed)+'. Morgen gibt es ein neues Rätsel.';
-  else if(S.mode==='level')note.textContent=best[S.n]?'Bestzeit '+sizeLabel(S.n)+': '+fmt(best[S.n]):'Noch keine Bestzeit für '+sizeLabel(S.n);
+  else if(S.mode==='level')note.textContent=best[bk]?'Bestzeit '+G.bestLabel(bk)+': '+fmt(best[bk]):'Noch keine Bestzeit für '+G.bestLabel(bk);
   else{const st=streak();note.textContent=st?'Tägliche Serie: '+st+(st===1?' Tag':' Tage'):'Jeden Tag ein neues Rätsel, für alle gleich.'}
   const hb=$('#hint');
-  if(S.solved&&S.mode==='level'){hb.disabled=false;hb.textContent='Level '+progress.level+' starten'}
+  if(S.solved&&S.mode==='level'){hb.disabled=false;hb.textContent='Level '+getProg().level+' starten'}
   else{hb.disabled=S.solved;hb.textContent='Hinweis'}
   $('#reset').disabled=S.solved;
 }
 
-function streak(){
-  let d=new Date(),n=0;
-  if(!dailyLog[dayKey(d)])d.setDate(d.getDate()-1);
-  while(dailyLog[dayKey(d)]){n++;d.setDate(d.getDate()-1)}
-  return n;
-}
-
-// ---- Eingabe: Tippen wechselt leer → X → Krone, Ziehen setzt X ----
-const board=$('#board');
+// ---- Eingabe ----
+const cellAt=(x,y)=>{const el=document.elementFromPoint(x,y),c=el&&el.closest?el.closest('.cell'):null;return c&&board.contains(c)?+c.dataset.i:-1};
 board.addEventListener('pointerdown',e=>{
-  const cell=e.target.closest('.cell');if(!cell||!S||S.solved)return;
-  e.preventDefault();if(H)hideHint();const i=+cell.dataset.i;drag={start:i,last:i,moved:false,mode:null};
+  const c=e.target.closest('.cell');if(!c||!S||S.solved)return;
+  e.preventDefault();if(H)hideHint();dragging=true;G.down(+c.dataset.i);
 });
-window.addEventListener('pointermove',e=>{
-  if(!drag)return;
-  const el=document.elementFromPoint(e.clientX,e.clientY),cell=el&&el.closest?el.closest('.cell'):null;
-  if(!cell)return;const i=+cell.dataset.i;if(i===drag.last)return;
-  if(!drag.moved){drag.moved=true;drag.mode=S.marks[drag.start]===1?'clear':'x';applyDrag(drag.start)}
-  drag.last=i;applyDrag(i);
-});
-function endDrag(){if(!drag)return;if(!drag.moved)tap(drag.start);drag=null;afterChange()}
-window.addEventListener('pointerup',endDrag);
-window.addEventListener('pointercancel',()=>{drag=null;if(S)afterChange()});
+window.addEventListener('pointermove',e=>{if(!dragging)return;const i=cellAt(e.clientX,e.clientY);if(i>=0)G.move(i)});
+window.addEventListener('pointerup',()=>{if(!dragging)return;dragging=false;G.up();afterChange()});
+window.addEventListener('pointercancel',()=>{if(!dragging)return;dragging=false;G.up();afterChange()});
 board.addEventListener('keydown',e=>{
-  const cell=e.target.closest('.cell');if(!cell||S.solved)return;
-  if(e.key==='Enter'||e.key===' '){e.preventDefault();tap(+cell.dataset.i);afterChange();return}
-  const i=+cell.dataset.i,n=S.n,mv={ArrowUp:-n,ArrowDown:n,ArrowLeft:-1,ArrowRight:1}[e.key];
-  if(mv!==undefined){e.preventDefault();const j=i+mv;if(j>=0&&j<n*n&&!(Math.abs(mv)===1&&((j/n)|0)!==((i/n)|0)))board.children[j].focus()}
+  const cell=e.target.closest('.cell');if(!cell||!S||S.solved)return;const i=+cell.dataset.i,n=S.n;
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();G.key(i);afterChange();return}
+  const mv={ArrowUp:-n,ArrowDown:n,ArrowLeft:-1,ArrowRight:1}[e.key];
+  if(mv!==undefined){e.preventDefault();const j=i+mv;if(j>=0&&j<n*n&&!(Math.abs(mv)===1&&((j/n)|0)!==((i/n)|0))){
+    board.querySelectorAll('.cell')[j].focus();if(G.id==='zip'&&e.shiftKey){G.move(j);afterChange()}}}
 });
 board.addEventListener('click',e=>e.preventDefault());
+function afterChange(){if(!S)return;startTimer();paint();if(!S.solved&&G.won())win();save()}
 
-function applyDrag(i){
-  if(drag.mode==='x'&&S.marks[i]===0)S.marks[i]=1;
-  else if(drag.mode==='clear'&&S.marks[i]===1)S.marks[i]=0;
-  paint();
-}
-function tap(i){
-  const m=S.marks[i];
-  if(m===0)S.marks[i]=(settings.autoX&&view.attacked[i])?2:1;
-  else if(m===1)S.marks[i]=2;
-  else S.marks[i]=0;
-}
-function afterChange(){startTimer();paint();checkWin();save()}
-
-// ---- Hinweis (logischer Schritt mit Erklärung) ----
-let H=null;
-const NUM=['','eine','zwei','drei'];
-function blocks(i,j,n){const r=(i/n)|0,c=i%n,r2=(j/n)|0,c2=j%n;return r===r2||c===c2||S.reg[i]===S.reg[j]||(Math.abs(r-r2)<=1&&Math.abs(c-c2)<=1)}
-function combos(arr,k,f){return (function(){let res=null;const p=[];(function go(s){if(res)return;if(p.length===k){res=f(p.slice());return}for(let x=s;x<arr.length&&!res;x++){p.push(arr[x]);go(x+1);p.pop()}})(0);return res})()}
-function findHint(){
-  const n=S.n,N=n*n,rows=[],cols=[],regs=[];
-  for(let k=0;k<n;k++){rows.push([]);cols.push([]);regs.push([])}
-  for(let i=0;i<N;i++){rows[(i/n)|0].push(i);cols[i%n].push(i);regs[S.reg[i]].push(i)}
-  // 1) Fehler zuerst
-  for(let i=0;i<N;i++)if(S.marks[i]===2&&S.sol[(i/n)|0]!==i%n)
-    return{text:'Diese Krone führt nicht zur Lösung und wird entfernt.',hl:[i],tgt:[i],kind:'clear'};
-  for(let r=0;r<n;r++){const i=r*n+S.sol[r];if(S.marks[i]===1)
-    return{text:'Dieses X steht auf einem Feld, das noch gebraucht wird. Es wird entfernt.',hl:[i],tgt:[i],kind:'clear'}}
-  const att=compute().attacked,cand=new Uint8Array(N);
-  for(let i=0;i<N;i++)cand[i]=(S.marks[i]===0&&!att[i])?1:0;
-  const crowned=u=>u.some(i=>S.marks[i]===2),cands=u=>u.filter(i=>cand[i]);
-  const T={reg:{u:regs,one:'Farbfläche',many:'Farbflächen',of:i=>S.reg[i]},row:{u:rows,one:'Zeile',many:'Zeilen',of:i=>(i/n)|0},col:{u:cols,one:'Spalte',many:'Spalten',of:i=>i%n}};
-  // 2) Nur noch ein freies Feld
-  for(const t of [T.reg,T.row,T.col])for(const u of t.u){
-    if(crowned(u))continue;const c=cands(u);
-    if(c.length===1)return{text:'In dieser '+t.one+' ist nur noch ein Feld frei. Dort muss die Krone hin.',hl:u,tgt:c,kind:'crown'};
-  }
-  // 3) Ohne Auto-X: gesperrte Felder markieren
-  if(!settings.autoX){const t=[];for(let i=0;i<N;i++)if(S.marks[i]===0&&att[i])t.push(i);
-    if(t.length)return{text:'Diese Felder sind durch deine Kronen bereits gesperrt. Markiere sie mit X.',hl:t,tgt:t,kind:'x'}}
-  // 4) Einschluss: k Einheiten liegen komplett in k anderen Einheiten
-  function confine(k,A,B){
-    const open=A.u.filter(u=>!crowned(u)&&cands(u).length);
-    return combos(open,k,pick=>{
-      const cs=[].concat(...pick.map(cands)),bs=new Set(cs.map(B.of));
-      if(bs.size!==k)return null;
-      const inA=new Set([].concat(...pick)),tgt=[];
-      for(const b of bs)for(const i of B.u[b])if(cand[i]&&!inA.has(i))tgt.push(i);
-      if(!tgt.length)return null;
-      const text=k===1
-        ?'Alle freien Felder dieser '+A.one+' liegen in einer '+B.one+'. Die Krone dieser '+B.one+' gehört also zur '+A.one+', alle anderen Felder der '+B.one+' fallen weg.'
-        :'Die freien Felder dieser '+NUM[k]+' '+A.many+' liegen in nur '+NUM[k]+' '+B.many+'. Deren Kronen kommen also aus diesen '+A.many+', alle anderen Felder dort fallen weg.';
-      return{text,hl:[].concat(...pick),tgt,kind:'x'};
-    });
-  }
-  const pairs=[[T.reg,T.row],[T.reg,T.col],[T.row,T.reg],[T.col,T.reg]];
-  for(const [A,B] of pairs){const h=confine(1,A,B);if(h)return h}
-  // 5) Eine Krone hier würde eine Einheit komplett blockieren
-  for(const t of [T.reg,T.row,T.col])for(const u of t.u){
-    if(crowned(u))continue;const uc=cands(u),inU=new Set(u),tgt=[];
-    for(let i=0;i<N;i++)if(cand[i]&&!inU.has(i)&&uc.every(j=>blocks(i,j,n)))tgt.push(i);
-    if(tgt.length)return{text:'Eine Krone auf den markierten Feldern würde alle freien Felder dieser '+t.one+' blockieren. Dort kann also keine Krone stehen.',hl:u,tgt,kind:'x'};
-  }
-  for(const k of [2,3])for(const [A,B] of pairs){const h=confine(k,A,B);if(h)return h}
-  // 6) Rückfall: eine Krone zeigen
-  const size=new Array(n).fill(0);S.reg.forEach(g=>size[g]++);
-  const open=S.sol.map((c,r)=>r*n+c).filter(i=>S.marks[i]!==2).sort((a,b)=>size[S.reg[a]]-size[S.reg[b]]);
-  return{text:'Hier gibt es keinen einfachen nächsten Schritt mehr. Auf dieses Feld gehört eine Krone.',hl:regs[S.reg[open[0]]],tgt:[open[0]],kind:'crown'};
-}
+// ---- Hinweis ----
 function hint(){
   if(!S)return;
   if(S.solved){if(S.mode==='level')loadGame();return}
-  H=findHint();H.hl=new Set(H.hl);H.tgt=new Set(H.tgt);
+  H=G.hint();H.hl=new Set(H.hl);H.tgt=new Set(H.tgt);
   S.elapsed+=PENALTY;S.hints++;
-  $('#hintText').textContent=H.text;
-  $('#hintApply').textContent=H.kind==='crown'?'Krone setzen':H.kind==='x'?'X setzen':'Entfernen';
+  $('#hintText').textContent=H.text;$('#hintApply').textContent=H.label;
   $('#hintBox').hidden=false;$('.tools').hidden=true;
   startTimer();paint();save();
 }
-function hideHint(){H=null;$('#hintBox').hidden=true;$('.tools').hidden=false;if(S)paint()}
-function applyHint(){
-  if(!H)return;const v=H.kind==='crown'?2:H.kind==='x'?1:0;
-  for(const i of H.tgt)S.marks[i]=v;
-  hideHint();afterChange();
-}
+function hideHint(silent){H=null;$('#hintBox').hidden=true;$('.tools').hidden=false;if(!silent)paint()}
+function applyHint(){if(!H)return;H.apply();hideHint();afterChange()}
+
 // ---- Gewonnen ----
-function checkWin(){
-  if(S.solved||view.crowns.length!==S.n||view.conflict.size)return;
+let winA=()=>{},winB=()=>{};
+function setWin(a,fa,b,fb){$('#winBtn').textContent=a;$('#winAlt').textContent=b;winA=fa;winB=fb}
+function win(){
   pauseTimer();S.solved=true;
-  const t=S.elapsed,lines=[];
+  const t=S.elapsed,lines=[],bk=G.bestKey(S);
   if(S.mode==='level'){
-    const prev=best[S.n];
-    if(!prev||t<prev){best[S.n]=t;store.set('kr_best',best);lines.push(prev?'Neue Bestzeit für '+sizeLabel(S.n)+'.':'Erste Bestzeit für '+sizeLabel(S.n)+'.')}
-    else lines.push('Bestzeit '+sizeLabel(S.n)+': '+fmt(prev));
-    progress.level++;store.set('kr_progress',progress);
-    const nn=sizeFor(progress.level);
-    if(nn!==S.n)lines.push('Ab jetzt spielst du auf '+sizeLabel(nn)+'.');
-    setWin('Level '+progress.level+' starten',()=>loadGame(),'Zum täglichen Rätsel',()=>setMode('daily'));
+    const best=store.get(K('best'),{}),prev=best[bk];
+    if(!prev||t<prev){best[bk]=t;store.set(K('best'),best);lines.push(prev?'Neue Bestzeit für '+G.bestLabel(bk)+'.':'Erste Bestzeit für '+G.bestLabel(bk)+'.')}
+    else lines.push('Bestzeit '+G.bestLabel(bk)+': '+fmt(prev));
+    const prog=getProg();prog.level++;store.set(K('progress'),prog);
+    const nl=G.label(G.levelParams(prog.level));if(nl!==G.label(S))lines.push('Ab jetzt spielst du '+nl+'.');
+    setWin('Level '+prog.level+' starten',()=>loadGame(),'Zum täglichen Rätsel',()=>setMode('daily'));
   }else{
-    dailyLog[S.day]={t,h:S.hints};store.set('kr_daily',dailyLog);
+    const log=store.get(K('daily'),{});log[S.day]={t,h:S.hints};store.set(K('daily'),log);
     const st=streak();lines.push('Tägliche Serie: '+st+(st===1?' Tag.':' Tage.'));
     setWin('Zum Level-Modus',()=>setMode('level'),'Schließen',()=>{});
   }
   if(S.hints)lines.push(S.hints+(S.hints===1?' Hinweis':' Hinweise')+' benutzt, das sind '+S.hints*15+' Sekunden Aufschlag.');
-  save();paint();updateHeader();
-  board.classList.add('win');
-  $('#winTime').textContent=fmt(t);
+  save();paint();updateHeader();board.classList.add('win');
+  $('#winTitle').textContent=G.name+' gelöst';$('#winTime').textContent=fmt(t);
   $('#winText').innerHTML=lines.map(l=>'<p>'+l+'</p>').join('');
-  setTimeout(()=>$('#winDlg').showModal(),matchMedia('(prefers-reduced-motion: reduce)').matches?200:S.n*90+500);
+  setTimeout(()=>{if(S&&S.solved)$('#winDlg').showModal()},matchMedia('(prefers-reduced-motion: reduce)').matches?200:S.n*90+500);
 }
-let winA=()=>{},winB=()=>{};
-function setWin(a,fa,b,fb){$('#winBtn').textContent=a;$('#winAlt').textContent=b;winA=fa;winB=fb}
 $('#winBtn').addEventListener('click',()=>{$('#winDlg').close();winA()});
 $('#winAlt').addEventListener('click',()=>{$('#winDlg').close();winB()});
 $('#winDlg').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
-function setMode(m){pauseTimer();save();mode=m;store.set('kr_mode',mode);if(H)hideHint();loadGame()}
+
+function setMode(m){pauseTimer();save();mode=m;store.set('kr_mode',mode);loadGame()}
+function setGame(id){pauseTimer();save();G=GAMES[id];store.set('rk_game',id);loadGame();updateHeader()}
 
 // ---- Leisten, Dialoge ----
 let toastT;
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2600)}
 $('#hint').addEventListener('click',hint);
-$('#hintHide').addEventListener('click',hideHint);
+$('#hintHide').addEventListener('click',()=>hideHint());
 $('#hintApply').addEventListener('click',applyHint);
-$('#reset').addEventListener('click',()=>{if(!S||S.solved)return;S.marks.fill(0);afterChange();toast('Brett geleert. Die Zeit läuft weiter.')});
+$('#reset').addEventListener('click',()=>{if(!S||S.solved)return;G.clear();afterChange();toast('Zurückgesetzt. Die Zeit läuft weiter.')});
 document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{
-  if(b.dataset.mode===mode&&!(S&&S.solved&&mode==='level'))return;setMode(b.dataset.mode);
-}));
-$('#rulesBtn').addEventListener('click',()=>$('#rulesDlg').showModal());
+  if(b.dataset.mode===mode&&!(S&&S.solved&&mode==='level'))return;setMode(b.dataset.mode)}));
+document.querySelectorAll('.games button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.game!==G.id)setGame(b.dataset.game)}));
+$('#rulesBtn').addEventListener('click',()=>{$('#rulesTitle').textContent='So wird '+G.name+' gespielt';
+  $('#rulesBody').innerHTML=G.rules+'<p>Jedes Rätsel hat genau eine Lösung und lässt sich ohne Raten lösen. Ein Hinweis zeigt den nächsten logischen Schritt und kostet 15 Sekunden.</p>';$('#rulesDlg').showModal()});
 $('#setBtn').addEventListener('click',()=>{renderSettings();$('#setDlg').showModal()});
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
 $('#autoX').addEventListener('change',e=>{settings.autoX=e.target.checked;store.set('kr_settings',settings);if(S)paint()});
 $('#wipe').addEventListener('click',()=>{
-  if(!confirm('Level, Bestzeiten und tägliche Serie wirklich löschen?'))return;
-  ['kr_progress','kr_best','kr_daily','kr_game_level','kr_game_daily'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});
-  progress={level:1};best={};dailyLog={};runStart=null;S=null;$('#setDlg').close();loadGame();
+  if(!confirm('Level, Bestzeiten und tägliche Serie von '+G.name+' wirklich löschen?'))return;
+  ['progress','best','daily','game_level','game_daily'].forEach(k=>{try{localStorage.removeItem(K(k))}catch(e){}});
+  runStart=null;S=null;$('#setDlg').close();loadGame();
 });
 function renderSettings(){
-  $('#autoX').checked=settings.autoX;
-  let h='';for(let n=5;n<=10;n++)h+='<tr><td>'+sizeLabel(n)+'</td><td>'+(best[n]?fmt(best[n]):'–')+'</td></tr>';
-  $('#bestTable').innerHTML=h;
-  const days=Object.keys(dailyLog).length;
-  $('#stats').textContent='Aktuelles Level: '+progress.level+'. Tägliche Rätsel gelöst: '+days+'. Serie: '+streak()+'.';
+  $('#autoX').checked=settings.autoX;$('#bestTitle').textContent='Bestzeiten '+G.name;
+  const best=store.get(K('best'),{});
+  $('#bestTable').innerHTML=G.bestKeys.map(k=>'<tr><td>'+G.bestLabel(k)+'</td><td>'+(best[k]?fmt(best[k]):'–')+'</td></tr>').join('');
+  $('#stats').textContent='Aktuelles Level: '+getProg().level+'. Tägliche Rätsel gelöst: '+Object.keys(store.get(K('daily'),{})).length+'. Serie: '+streak()+'.';
+  $('#wipe').textContent=G.name+' zurücksetzen';
 }
-
-// Tagesrätsel wechselt um Mitternacht
-setInterval(()=>{if(S&&S.mode==='daily'&&S.day!==dayKey()){loadGame()}},60000);
-
-if('serviceWorker' in navigator&&location.protocol.startsWith('http')){
-  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
-}
-loadGame();
+setInterval(()=>{if(S&&S.mode==='daily'&&S.day!==dayKey())loadGame()},60000);
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+$('#giQ').innerHTML=CROWN;$('#giT').innerHTML=SUN;$('#giZ').innerHTML=PATHICON;
+updateHeader();loadGame();
 
 </script>
 </body>
